@@ -1,0 +1,113 @@
+<html>
+    <head>
+        <title>LA MIA CHAT SPASTICA</title>
+         <script src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+        <script>
+        $(document).ready(function(){
+           $("#newRoomForm").on("submit", function(e){
+              e.preventDefault();
+               nuovaStanza();
+           });
+            
+            $("#modButton").on("click", function(e){
+              e.preventDefault();
+               modifica();
+           });
+            
+            $("#viewButton").on("click", function(e){
+              e.preventDefault();
+               visualizza();
+           });
+        });
+        
+        
+        function nuovaStanza(){
+            var dataJson = {};
+            dataJson["name"] = $("#newRoomFormName").val();
+            dataJson["number"] = $("#newRoomFormNumber").val();
+            
+            var data = JSON.stringify(dataJson);
+        
+            alert(data);
+            $.ajax({
+                type:"post",
+                url: "http://localhost:8080/room",
+                data: data,
+                dataType: "json",
+                contentType: "application/json"
+            }).done(function(data){
+                alert(data);
+                    });   
+            alert("done");
+            return false;
+        };
+        
+        function modifica(){
+            var dataJson = {};
+            dataJson["number"] = $("#modRoomFormNumber").val();
+            dataJson["newName"] = $("#modRoomFormName").val();
+            
+            var data = JSON.stringify(dataJson);
+        
+            alert(data);
+            $.ajax({
+                type:"put",
+                url: "http://localhost:8080/room",
+                data: data,
+                dataType: "json",
+                contentType: "application/json",
+                success: function(data){
+                    alert(data);
+                }
+                
+            }).done(function(data){
+                alert(data);
+                    });   
+            alert("done");
+            return false;
+        };
+        
+        function visualizza(){
+            $.ajax({
+                type:"get",
+                url: "http://localhost:8080/rooms",
+                success: function(data){
+                    alert(data);
+                }
+                
+            }).done(function(data){
+                alert(data);
+                    });   
+            alert("done");
+            return false;
+        };
+    </script>
+    </head>
+    <body>
+        <a href="index.html"><button>HOME</button></a>
+        <br>
+        <div id="allRoom">
+            
+        </div>
+        <button id="viewButton">Visualizza</button>
+        <hr>
+        <h1>NUOVA STANZA</h1>
+        <form id="newRoomForm" action="http://localhost:8080/room" method="post">
+            <label>Nome</label>
+            <input type="text"  id="newRoomFormName" name="name"/>
+            <label>Numero</label>
+            <input type="text"  id="newRoomFormNumber" name="name"/>
+            <input type="submit" value="Crea stanza"/>
+        </form>
+        <h1>MODIFICA STANZA</h1>
+        <form id="modForm" action="localhost:8080/user">
+            <label>Numero stanza</label>
+            <input type="text" id="modRoomFormNumber" name="name"/>
+            <label>Nuovo nome stanza</label>
+            <input type="text" id="modRoomFormName" name="name"/>
+            <input id="modButton" type="submit" value="Modifica"/>
+        </form>
+    </body>
+</html>

@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <title>LA MIA CHAT SPASTICA</title>
+         <script src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+        <script>
+        $(document).ready(function(){
+           $("#newMsgForm").on("submit", function(e){
+              e.preventDefault();
+               nuovoMsg();
+           });
+        });
+        
+        
+        function nuovoMsg(){
+            var date= new Date();
+            var yyyy = date.getFullYear();
+            var mm = date.getMonth() +  1;
+            var dd = date.getDate();
+            if(mm <10)
+                mm = '0'+mm;
+            if(dd<10)
+                dd = '0'+dd;
+            
+            var fullDate = yyyy + "-" + mm + "-" + dd;
+            var data = fullDate.toString();
+            
+            var dataJson = {};
+            dataJson["nameuser"] = $("#newMsgFormName").val();
+            dataJson["numberroom"] = $("#newMsgFormNumber").val();
+            dataJson["text"] = $("#newMsgFormText").val();
+            dataJson["date"] = data;
+            
+            var data = JSON.stringify(dataJson);
+        
+            alert(data);
+            $.ajax({
+                type:"post",
+                url: "http://localhost:8080/msg",
+                data: data,
+                dataType: "json",
+                contentType: "application/json"
+            }).done(function(data){
+                alert(data);
+                    });   
+            alert("done");
+            return false;
+        };
+    </script>
+    </head>
+    <body>
+        <a href="index.html"><button>HOME</button></a>
+        <hr>
+        <h1>NUOVO MESSAGGIO</h1>
+        <form id="newMsgForm" action="http://localhost:8080/msg" method="post">
+            <label>Nome utente</label>
+            <input type="text"  id="newMsgFormName" name="name"/>
+            <label>Numero stanza</label>
+            <input type="number"  id="newMsgFormNumber" name="name"/>
+            <label>Testo</label>
+            <input type="text"  id="newMsgFormText" name="name"/>
+            <input type="submit" value="Invia"/>
+        </form>
+        <h1>VISUALIZZA MESSAGGI</h1>
+        <form id="modForm" action="http://localhost:8080/msg"  method="get">
+            <label>Numero stanza</label>
+            <input type="text" id="viewMsgFormNumber" name="room"/>
+            <label>Data</label>
+            <input type="date" id="viewMsgFormDate" name="time"/>
+            <input id="ViewButton" type="submit" value="Visualizza"/>
+        </form>
+    </body>
+</html>

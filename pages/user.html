@@ -1,0 +1,121 @@
+<html>
+    <head>
+        <title>La mia chat spastica</title>
+    </head>
+    <script src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+           $("#regForm").on("submit", function(e){
+              e.preventDefault();
+               registrazione();
+           });
+            
+            $("#modButton").on("click", function(e){
+              e.preventDefault();
+               modifica();
+           });
+            
+            $("#viewButton").on("click", function(e){
+              e.preventDefault();
+               visualizza();
+           });
+        });
+        
+        
+        function registrazione(){
+            var dataJson = {};
+            dataJson["name"] = $("#regFormName").val();
+            
+            var data = JSON.stringify(dataJson);
+        
+            alert(data);
+            $.ajax({
+                type:"post",
+                url: "http://localhost:8080/user",
+                data: data,
+                dataType: "json",
+                contentType: "application/json"
+            }).done(function(data){
+                alert(data);
+                    });   
+            alert("done");
+            return false;
+        };
+        
+        function modifica(){
+            var dataJson = {};
+            dataJson["name"] = $("#modFormVName").val();
+            dataJson["newName"] = $("#modFormNName").val();
+            
+            var data = JSON.stringify(dataJson);
+        
+            alert(data);
+            $.ajax({
+                type:"put",
+                url: "http://localhost:8080/user",
+                data: data,
+                dataType: "json",
+                contentType: "application/json",
+                success: function(data){
+                    alert(data);
+                }
+                
+            }).done(function(data){
+                alert(data);
+                    });   
+            alert("done");
+            return false;
+        };
+        
+        function visualizza(){
+            var dataJson = {};
+            var name = $("#viewFormName").val();
+            dataJson["name"] = name;
+            
+            var data = JSON.stringify(dataJson);
+        
+            alert(data);
+            $.ajax({
+                type:"get",
+                url: "http://localhost:8080/user/" + name,
+                data: data,
+                dataType: "json",
+                contentType: "application/json",
+                success: function(data){
+                    alert(data);
+                }
+                
+            }).done(function(data){
+                alert(data);
+                    });   
+            alert("done");
+            return false;
+        };
+    </script>
+    <body>
+        <a href="index.html"><button>HOME</button></a>
+        
+        <h1>REGISTRATI</h1>
+        <form id="regForm" action="http://localhost:8080/user" method="post">
+            <label>Nome utente</label>
+            <input type="text"  id="regFormName" name="name"/>
+            <input type="submit" value="Registrati"/>
+        </form>
+        <h1>MODIFICA</h1>
+        <form id="modForm" action="localhost:8080/user">
+            <label>Vecchio nome</label>
+            <input type="text" id="modFormVName" name="name"/>
+            <label>Nuovo nome</label>
+            <input type="text" id="modFormNName" name="name"/>
+            <input id="modButton" type="submit" value="Modifica"/>
+        </form>
+        <h1>VISUALIZZA PROFILO DI</h1>
+        <form method="get">
+            <label>Nome utente</label>
+            <input id="viewFormName" type="text" name="name"/>
+            <input id="viewButton" type="submit" value="Visualizza"/>
+        </form>
+    </body>
+</html>
